@@ -1,0 +1,21 @@
+security:
+    encoders:
+            FOS\UserBundle\Model\UserInterface: bcrypt
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+    firewalls:
+        main:
+            pattern: ^/
+            form_login:
+                provider: fos_userbundle
+                csrf_token_generator: security.csrf.token_manager
+
+            logout:       true
+            anonymous:    true
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/forgot-password, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
