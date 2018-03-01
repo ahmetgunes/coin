@@ -1,0 +1,21 @@
+{
+  "name": "template",
+  "description": "Coin Temp",
+  "main": "index.js",
+  "authors": [
+    "Ahmet Güneş"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "jquery": "^3.3.1"
+  }
+}
