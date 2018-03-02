@@ -10,6 +10,12 @@ use FOS\UserBundle\Model\User as BaseUser;
  */
 class User extends BaseUser
 {
+    const SECRET_QUESTIONS = [
+        'What was the name of your primary school?' => 0,
+        'In what city or town does your sibling live?' => 1,
+        'What is your pets name?' => 2
+    ];
+
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id

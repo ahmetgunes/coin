@@ -1,7 +1,10 @@
 fos_user:
     db_driver: orm
     firewall_name: main
-    user_class: AppBundle\Entity\User
+    user_class: App\Entity\User
+    registration:
+        form:
+            type: App\Types\RegistrationType
     from_email:
         address: "null"
         sender_name: "null"

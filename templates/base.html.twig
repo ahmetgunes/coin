@@ -3,14 +3,16 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('main/css/main.min.css') }}">
-        {% endblock %}
+        {% include 'includes/stylesheets.html.twig' %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}
-            <script src="{{ asset('main/js/main.min.js') }}"></script>
+        {% block body %}
+            {% include 'includes/nav.html.twig' %}
+            <div class="container-fluid">
+            {% block content %}
+            {% endblock %}
+            </div>
+            {% include 'includes/javascripts.html.twig' %}
         {% endblock %}
     </body>
 </html>

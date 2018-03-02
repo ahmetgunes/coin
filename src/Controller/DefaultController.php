@@ -21,6 +21,7 @@ class DefaultController extends BaseController
      */
     public function indexAction()
     {
+        $this->get('security.password_encoder');
         return $this->render('base.html.twig');
     }
 }
