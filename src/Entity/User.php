@@ -34,6 +34,35 @@ class User extends BaseUser
     protected $secretQuestion;
 
     /**
+     * @ORM\Column(type="string", name="private_key", nullable=false)
+     */
+    protected $privateKey;
+
+    /**
+     * @ORM\Column(type="string", name="public_key", nullable=false)
+     */
+    protected $publicKey;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     * @return User
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getSecretAnswer()
@@ -43,10 +72,13 @@ class User extends BaseUser
 
     /**
      * @param mixed $secretAnswer
+     * @return User
      */
-    public function setSecretAnswer($secretAnswer): void
+    public function setSecretAnswer($secretAnswer)
     {
         $this->secretAnswer = $secretAnswer;
+
+        return $this;
     }
 
     /**
@@ -59,9 +91,50 @@ class User extends BaseUser
 
     /**
      * @param mixed $secretQuestion
+     * @return User
      */
-    public function setSecretQuestion($secretQuestion): void
+    public function setSecretQuestion($secretQuestion)
     {
         $this->secretQuestion = $secretQuestion;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrivateKey()
+    {
+        return $this->privateKey;
+    }
+
+    /**
+     * @param mixed $privateKey
+     * @return User
+     */
+    public function setPrivateKey($privateKey)
+    {
+        $this->privateKey = $privateKey;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicKey()
+    {
+        return $this->publicKey;
+    }
+
+    /**
+     * @param mixed $publicKey
+     * @return User
+     */
+    public function setPublicKey($publicKey)
+    {
+        $this->publicKey = $publicKey;
+
+        return $this;
     }
 }

@@ -30,3 +30,6 @@ services:
         class: App\Types\RegistrationType
         tags:
             - {name: form.type}
+    app.key_generator:
+        class: App\Services\KeyGenerator;
+        arguments: ['@doctrine.dbal.default_connection']
