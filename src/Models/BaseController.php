@@ -6,7 +6,7 @@
  * Time: 17:04
  */
 
-namespace App\Controller;
+namespace App\Models;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,5 +39,13 @@ abstract class BaseController extends Controller
     protected function throwJsonError(\Exception $ex)
     {
         return $this->jsonResponse(false, $ex->getMessage());
+    }
+
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected function getManager()
+    {
+        return $this->getDoctrine()->getManager();
     }
 }

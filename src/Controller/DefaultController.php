@@ -7,6 +7,8 @@
  */
 
 namespace App\Controller;
+
+use App\Models\BaseController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -17,11 +19,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends BaseController
 {
     /**
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @Route("/", name="homepage")
      */
     public function indexAction()
     {
-        $this->get('security.password_encoder');
-        return $this->render('base.html.twig');
+        if ($user = $this->getUser()) {
+            $balance = $this->getManager()->getRepository('App:Transaction')->getUserBalance($user->getId());
+
+            return $this->render('Default\index.html.twig', ['balance' => $balance]);
+        } else {
+            return $this->redirectToRoute('fos_user_security_login');
+        }
     }
 }

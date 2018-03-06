@@ -6,7 +6,9 @@ module.exports = function () {
         mainJS: {
             src: [
                 __dirname + '/../../vendor/jquery/dist/jquery.min.js',
-                __dirname + '/../../vendor/bootstrap/dist/js/bootstrap.min.js'
+                __dirname + '/../../vendor/bootstrap/dist/js/bootstrap.min.js',
+                __dirname + '/../../src/main/js/alert.js',
+                __dirname + '/../../src/main/js/transaction.js'
             ],
             dest: 'temp/main/js/main.js',
             nonull: true

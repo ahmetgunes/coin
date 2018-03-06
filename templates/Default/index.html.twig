@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {% if app.user %}
+        <div class="middle-container">
+            <h6>Balance: {{ balance |default(0) }} A$</h6>
+            <button id="buy"></button>
+        </div>
+        <div id="message-container"></div>
+    {% endif %}
+{% endblock %}

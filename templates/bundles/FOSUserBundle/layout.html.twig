@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <div class="form-signin">
+    <div class="middle-container">
         <div class="warnings">
             {% if app.request.hasPreviousSession %}
                 {% for type, messages in app.session.flashbag.all() %}
