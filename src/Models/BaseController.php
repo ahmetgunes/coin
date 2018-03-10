@@ -38,7 +38,23 @@ abstract class BaseController extends Controller
      */
     protected function throwJsonError(\Exception $ex)
     {
-        return $this->jsonResponse(false, $ex->getMessage());
+        return $this->jsonResponse(false, self::extractMessage($ex));
+    }
+
+    protected function throwError(\Exception $ex)
+    {
+        $this->addFlash('danger', self::extractMessage($ex));
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * @param \Exception $ex
+     * @return string
+     */
+    protected static function extractMessage(\Exception $ex)
+    {
+        return $ex->getMessage();
+        return $ex instanceof CustomException ? $ex->getMessage() : CustomException::DEFAULT_MESSAGE;
     }
 
     /**

@@ -33,8 +33,9 @@ class DefaultController extends BaseController
 
             $transactionModel = new CoinTransaction($this->get('doctrine'));
             $hash = $transactionModel->buy($user);
+            $balance = $this->getManager()->getRepository('App:Transaction')->getUserBalance($user->getId());
 
-            return $this->jsonResponse(true, $hash);
+            return $this->jsonResponse(true, $hash, ['balance' => $balance]);
         } catch (\Exception $ex) {
             return $this->throwJsonError($ex);
         }
@@ -49,10 +50,10 @@ class DefaultController extends BaseController
     {
         try {
             $hash = $request->get('hash');
-            $miner = new Miner($this->get('doctrine.dbal.default_connection'));
-            $amount = $miner->verify($hash);
+            $transactionModel = new CoinTransaction($this->get('doctrine'));
+            $amount = $transactionModel->verify($hash);
 
-            return $this->jsonResponse(true, $amount);
+            return $this->jsonResponse(true, 'The given hash is valued at ' . $amount . ' PG Coin');
         } catch (\Exception $ex) {
             return $this->throwJsonError($ex);
         }

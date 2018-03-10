@@ -1,10 +1,19 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {% if app.user %}
-        <div class="middle-container">
-            <h6>Balance: {{ balance |default(0) }} A$</h6>
-            <button id="buy"></button>
+        <div class="middle-container text-center">
+            <h6>Balance: <strong id="balance">{{ balance |default(0) }}</strong> PG Coin</h6>
+            <button class="btn btn-primary" id="buy">Buy PG Coin</button>
         </div>
-        <div id="message-container"></div>
+
+        <div class="middle-container text-center">
+            <label for="verify">Paste your hash here to verify</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control text-center" id="hash-holder"/>
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" id="verify">Verify</button>
+                </div>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

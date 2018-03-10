@@ -24,12 +24,31 @@ class DefaultController extends BaseController
      */
     public function indexAction()
     {
-        if ($user = $this->getUser()) {
-            $balance = $this->getManager()->getRepository('App:Transaction')->getUserBalance($user->getId());
+        try {
+            if ($user = $this->getUser()) {
+                $balance = $this->getManager()->getRepository('App:Transaction')->getUserBalance($user->getId());
 
-            return $this->render('Default\index.html.twig', ['balance' => $balance]);
-        } else {
-            return $this->redirectToRoute('fos_user_security_login');
+                return $this->render('Default\index.html.twig', ['balance' => $balance]);
+            } else {
+                return $this->redirectToRoute('fos_user_security_login');
+            }
+        } catch (\Exception $ex) {
+            return $this->throwError($ex);
+        }
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/history", name="history")
+     */
+    public function historyAction()
+    {
+        try {
+            $history = $this->getManager()->getRepository('App:Transaction')->findBy(['user' => $this->getUser()]);
+
+            return $this->render('Default\history.html.twig', ['history' => $history]);
+        } catch (\Exception $ex) {
+            return $this->throwError($ex);
         }
     }
 }

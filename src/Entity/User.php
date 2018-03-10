@@ -86,7 +86,7 @@ class User extends BaseUser
      */
     public function getSecretQuestion()
     {
-        return $this->secretQuestion;
+        return self::SECRET_QUESTIONS[$this->secretQuestion];
     }
 
     /**

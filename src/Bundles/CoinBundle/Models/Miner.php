@@ -9,6 +9,7 @@
 namespace App\Bundles\CoinBundle\Models;
 
 
+use App\Bundles\CoinBundle\Models\Exception\InvalidHashException;
 use Doctrine\DBAL\Connection;
 
 class Miner
@@ -20,34 +21,21 @@ class Miner
      */
     const BLOCK_NUMBER = 1;
 
-    /**
-     * @var Connection
-     */
-    protected $conn;
+    const COUNT = 40;
 
     /**
-     * Miner constructor.
-     * @param Connection $conn
-     */
-    public function __construct(Connection $conn)
-    {
-        $this->conn = $conn;
-    }
-
-    /**
+     * @param string $history
      * @return array
      *
-     * Mines a new hash and returns hash, nonce pair
+     * Mines a new hash and returns a hash, nonce pair
      */
-    public function mine()
+    public function mine(string $history)
     {
-        $transHistory = $this->getTransactionHistory();
-
         $hash = '';
         $nonce = 0;
 
         while (strpos($hash, self::VERIFICATION_PART) !== 0) {
-            $hash = sha1(self::BLOCK_NUMBER . '_' . $transHistory . $nonce);
+            $hash = self::calculateHash($history, $nonce);
             $nonce++;
         }
 
@@ -55,34 +43,34 @@ class Miner
     }
 
     /**
-     * @param $hash
+     * @param string $hash
+     * @param string $history
      * @return int
+     *
+     * Verifies and returns the amount corresponding to a given hash
      */
-    public function verify($hash)
+    public function verify(string $hash, string $history)
     {
-        $transHistory = $this->getPreviousTranscationHistory($hash);
         $nonce = 0;
         $key = '';
 
         while ($hash !== $key) {
-            $key = sha1(self::BLOCK_NUMBER . '_' . $transHistory . $nonce);
+            $key = self::calculateHash($history, $nonce);
             $nonce++;
         }
 
         return $nonce;
     }
 
-    private function getTransactionHistory()
+    /**
+     * @param $history
+     * @param $nonce
+     * @return string
+     *
+     * Calculates a hash using sha1
+     */
+    private static function calculateHash($history, $nonce)
     {
-        $result = $this->conn->fetchAssoc('SELECT GROUP_CONCAT(CONCAT(id, ",", user_id, ",", amount, ",", hash) SEPARATOR "|") AS history FROM transaction');
-
-        return $result['history'];
-    }
-
-    private function getPreviousTranscationHistory($hash)
-    {
-        $result = $this->conn->fetchAssoc('SELECT GROUP_CONCAT(CONCAT(id, ",", user_id, ",", amount, ",", hash) SEPARATOR "|") AS history FROM transaction WHERE id < (SELECT id FROM transaction WHERE hash = ?)', [$hash]);
-
-        return $result['history'];
+        return sha1(self::BLOCK_NUMBER . '_' . $history . $nonce);
     }
 }

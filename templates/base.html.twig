@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% include 'includes/stylesheets.html.twig' %}
-    </head>
-    <body>
-        {% block body %}
-            {% include 'includes/nav.html.twig' %}
-            <div class="container-fluid">
-            {% block content %}
-            {% endblock %}
-            </div>
-            {% include 'includes/javascripts.html.twig' %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}PG Coin{% endblock %}</title>
+    {% include 'includes/stylesheets.html.twig' %}
+</head>
+<body>
+{% block body %}
+    {% include 'includes/nav.html.twig' %}
+    <div id="message-container" class="text-center">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <div class="container-fluid">
+        {% block content %}
         {% endblock %}
-    </body>
+    </div>
+    {% include 'includes/javascripts.html.twig' %}
+{% endblock %}
+</body>
 </html>
