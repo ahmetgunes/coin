@@ -8,14 +8,10 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Models\AccountException;
 use App\Models\BaseController;
-use App\Models\CustomException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
  * Class DefaultController
@@ -27,49 +23,44 @@ class AccountController extends BaseController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/forgot-password", name="account_forgot_password")
+     * @Route("/reset-password", name="account_reset_password")
      */
-    public function forgotPasswordAction(Request $request)
+    public function resetPasswordAction(Request $request)
     {
         try {
             if ($request->isMethod('GET')) {
-                $username = $request->get('username');
-                $user = $this->getDoctrine()->getRepository('App:User')->findOneBy(['username' => $username]);
-
-                if ($user instanceof User) {
-                    return $this->render('Account\forgot-password.html.twig', [
-                            'question' => $user->getSecretQuestion(),
-                            'username' => $user->getUsername()
-                        ]
-                    );
-                } else {
-                    throw new CustomException('No matching user has been found.');
-                }
+                return $this->render('Account/reset-password.html.twig');
             } else {
-                $secret = $request->get('secret');
-                $username = $request->get('username');
+                $currentPassword = $request->get('current_password');
+                $newPassword = $request->get('new_password');
+                $repeatPassword = $request->get('repeat_password');
 
-                $user = $this->getDoctrine()->getRepository('App:User')->findOneBy(['username' => $username]);
-
-                if ($user instanceof User) {
-                    $encodedSecret = $this->get('security.password_encoder')->encodePassword($user, $secret);
-                    if ($encodedSecret == $user->getSecretAnswer()) {
-                        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-                        $this->get('security.token_storage')->setToken($token);
-                        $this->get('session')->set('_security_main', serialize($token));
-
-                        $event = new InteractiveLoginEvent($request, $token);
-                        $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
-                        return $this->redirectToRoute('homepage');
-                    } else {
-                        throw new AccountException('No username secret match has been found.');
-                    }
-                } else {
-                    throw new AccountException('No username secret match has been found.');
+                if (strlen($newPassword) < 6) {
+                    throw new AccountException('Your password should be at least 6 characters long.');
                 }
+
+                if ($newPassword != $repeatPassword) {
+                    throw new AccountException('Your repeat passwords does not match.');
+                }
+
+                $encoder = $this->get('security.password_encoder');
+                $user = $this->getUser();
+
+                if (!$encoder->isPasswordValid($user, $currentPassword)) {
+                    throw new AccountException('Your current password is wrong.');
+                }
+
+                $password = $encoder->encodePassword($user, $newPassword);
+                $user->setPassword($password);
+                $this->getManager()->merge($user);
+                $this->getManager()->flush();
+
+                $this->addFlash('success', 'Your password has been changed successfully!');
+                return $this->redirectToRoute('homepage');
             }
         } catch (\Exception $ex) {
-            return $this->throwError($ex);
+            $this->throwError($ex);
+            return $this->redirectToRoute('account_reset_password');
         }
     }
 }

@@ -42,11 +42,6 @@ class RegistrationListener implements EventSubscriberInterface
     {
         $user = $event->getForm()->getData();
         if ($user instanceof User) {
-            //Hashing secret answer before saving the user
-            $secretAnswer = $this->encoder->encodePassword($user, $user->getSecretAnswer());
-            list($privateKey, $publicKey) = $this->keyGenerator->generateKeyPairForUser();
-
-            $user->setSecretAnswer($secretAnswer)->setPrivateKey($privateKey)->setPublicKey($publicKey);
         }
     }
 

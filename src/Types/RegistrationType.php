@@ -19,12 +19,7 @@ class RegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('secretQuestion', ChoiceType::class, [
-                'attr' => ['class' => 'form-control'],
-                'choices' => User::SECRET_QUESTIONS
-            ])
-            ->add('secretAnswer', null, ['attr' => ['class' => 'form-control']]);
+
     }
 
     public function getParent()

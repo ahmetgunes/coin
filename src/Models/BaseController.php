@@ -44,7 +44,6 @@ abstract class BaseController extends Controller
     protected function throwError(\Exception $ex)
     {
         $this->addFlash('danger', self::extractMessage($ex));
-        return $this->redirectToRoute('homepage');
     }
 
     /**

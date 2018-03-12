@@ -1,6 +1,0 @@
-services:
-    app.registration_listener:
-        class: App\Services\EventListeners\RegistrationListener
-        arguments: ['@security.user_password_encoder.generic', '@app.key_generator']
-        tags:
-            - {name: kernel.event_subscriber}

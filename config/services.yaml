@@ -23,13 +23,3 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-    app.user.registration:
-        class: App\Types\RegistrationType
-        tags:
-            - {name: form.type}
-    app.key_generator:
-        class: App\Services\KeyGenerator;
-        arguments: ['@doctrine.dbal.default_connection']
