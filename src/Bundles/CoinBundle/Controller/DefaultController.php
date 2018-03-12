@@ -31,7 +31,7 @@ class DefaultController extends BaseController
         try {
             $user = $this->getUser();
 
-            $transactionModel = new CoinTransaction($this->get('doctrine'));
+            $transactionModel = new CoinTransaction($this->get('doctrine'), $this->logger);
             $hash = $transactionModel->buy($user);
             $balance = $this->getManager()->getRepository('App:Transaction')->getUserBalance($user->getId());
 
@@ -50,7 +50,7 @@ class DefaultController extends BaseController
     {
         try {
             $hash = $request->get('hash');
-            $transactionModel = new CoinTransaction($this->get('doctrine'));
+            $transactionModel = new CoinTransaction($this->get('doctrine'), $this->logger);
             $amount = $transactionModel->verify($hash);
 
             return $this->jsonResponse(true, 'The given hash is valued at ' . $amount . ' PG Coin');

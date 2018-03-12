@@ -13,6 +13,7 @@ use App\Bundles\CoinBundle\Models\Exception\InvalidHashException;
 use App\Entity\Transaction;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Monolog\Logger;
 
 class CoinTransaction
 {
@@ -22,12 +23,19 @@ class CoinTransaction
     protected $doctrine;
 
     /**
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
      * CoinTransaction constructor.
      * @param Registry $doctrine
+     * @param Logger $logger
      */
-    public function __construct(Registry $doctrine)
+    public function __construct(Registry $doctrine, Logger $logger)
     {
         $this->doctrine = $doctrine;
+        $this->logger = $logger;
     }
 
     /**
@@ -49,6 +57,8 @@ class CoinTransaction
 
         $this->doctrine->getManager()->persist($transaction);
         $this->doctrine->getManager()->flush();
+
+        $this->logTransaction($transaction);
 
         return $hash;
     }
@@ -126,5 +136,12 @@ class CoinTransaction
         }
 
         return $history;
+    }
+
+    private function logTransaction(Transaction $transaction)
+    {
+        $template = '%s PG Coin has been sent to %s';
+        $message = sprintf($template, $transaction->getAmount(), $transaction->getUser()->getUsername());
+        $this->logger->addInfo($message);
     }
 }
